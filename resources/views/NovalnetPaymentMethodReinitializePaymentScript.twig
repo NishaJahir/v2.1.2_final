@@ -1,15 +1,17 @@
 <input type="hidden" name="nn_mop_id" id="nn_mop_id" value="{{paymentMethodIds}}">
+<input type="hidden" name="nn_pp_id" id="nn_pp_id" value="{{mopId}}">
+
 
 <script type="text/javascript">
 
 jQuery('document').ready(function() {
   jQuery('#redirect-payment-process').click(function() {
     window.location.href = jQuery('#nn_redirect_url').val();
-  }).click();
+  });
   
   jQuery('#form-payment-process').click(function() {
     jQuery('#novalnetPaymentForm').show();
-  }).click();
+  });
   
 });
 
@@ -24,6 +26,8 @@ jQuery('document').ready(function() {
   });
  
   var paymentMethodIds = jQuery('#nn_mop_id').val();
+  var pp = jQuery('#nn_pp_id').val();
+  console.log(pp);
   document.addEventListener('historyPaymentMethodChanged', e => {
     for(let property in e.detail.newOrder.order.properties){
       if(e.detail.newOrder.order.properties[property].typeId === 3){
