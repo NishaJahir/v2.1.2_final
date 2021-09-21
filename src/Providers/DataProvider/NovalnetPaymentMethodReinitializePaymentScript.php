@@ -8,8 +8,9 @@ use Plenty\Modules\Payment\Method\Models\PaymentMethod;
 
 class NovalnetPaymentMethodReinitializePaymentScript
 {
-  public function call(Twig $twig):string
+  public function call(Twig $twig, $arg):string
   {
+    $order = $arg[0]
     // Load the all Novalnet payment methods
     $paymentMethodRepository = pluginApp(PaymentMethodRepositoryContract::class);
     $paymentMethods          = $paymentMethodRepository->allForPlugin('plenty_novalnet');
@@ -23,6 +24,13 @@ class NovalnetPaymentMethodReinitializePaymentScript
         }
     }
     
-    return $twig->render('Novalnet::NovalnetPaymentMethodReinitializePaymentScript', ['paymentMethodIds' => $paymentMethodIds]);
+    foreach($order['properties'] as $property) {
+        if($property['typeId'] == 3)
+        {
+            $mopId = $property['value'];
+        }
+    }
+    
+    return $twig->render('Novalnet::NovalnetPaymentMethodReinitializePaymentScript', ['paymentMethodIds' => $paymentMethodIds, 'mopId', $mopId]);
   }
 }
