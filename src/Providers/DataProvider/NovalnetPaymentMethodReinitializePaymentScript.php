@@ -10,7 +10,7 @@ class NovalnetPaymentMethodReinitializePaymentScript
 {
   public function call(Twig $twig, $arg):string
   {
-    $order = $arg[0]
+    $order = $arg[0];
     // Load the all Novalnet payment methods
     $paymentMethodRepository = pluginApp(PaymentMethodRepositoryContract::class);
     $paymentMethods          = $paymentMethodRepository->allForPlugin('plenty_novalnet');
