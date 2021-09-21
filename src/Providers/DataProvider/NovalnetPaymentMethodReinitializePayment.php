@@ -86,7 +86,7 @@ class NovalnetPaymentMethodReinitializePayment
             'orderAmount' => $orderAmount,
             'orderCurrency' => $serverRequestData['data']['currency'],
             'instalmentCycles' => explode(',', trim($config->get('Novalnet.' . strtolower($paymentKey) . '_cycles')))
-            
+            'showDob' => empty($serverRequestData['data']['company']) ? true : false,
           ]);
        } else {
           return '';
