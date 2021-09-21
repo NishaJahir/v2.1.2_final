@@ -99,7 +99,7 @@ class NovalnetInstalmentInvoicePaymentMethod extends PaymentMethodService
         $this->getLogger(__METHOD__)->error('basket amount', $this->basket->basketAmount);
            $this->getLogger(__METHOD__)->error('basket', $this->basket);
            
-        return (bool)($this->paymentHelper->paymentActive() && $active_payment_allowed_country && $active_payment_minimum_amount && $active_payment_maximum_amount);
+        return (bool)($this->paymentHelper->paymentActive() && $active_payment_allowed_country && $active_payment_minimum_amount && $active_payment_maximum_amount && $this->basket->basketAmount >= 19.98);
         } 
         return false;
     
