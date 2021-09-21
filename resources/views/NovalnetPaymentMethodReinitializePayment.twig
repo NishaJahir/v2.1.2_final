@@ -1,0 +1,69 @@
+<link rel="stylesheet" href="{{plugin_path('Novalnet')}}/css/novalnet_ui.css">
+
+{% set paymentId = 0 %}
+{% set paidStatus = '' %}
+
+{% set properties = order.properties %}
+
+{% for property in properties %}
+  {% if property.typeId == 3 %}
+    {% set paymentId = property.value %}
+  {% endif %}
+  {% if property.typeId == 4 %}
+    {% set paidStatus = property.value %}
+  {% endif %}
+{% endfor %}
+{% if (paymentId == paymentMethodId) and (paidStatus != 'fullyPaid') %}
+  {% set display = "block" %}
+{% else %}
+  {% set display = "none" %}
+{% endif %}
+
+{% if services.template.isCurrentTemplate('tpl.my-account') %}
+  <button id="nnReinitPaymentMethod-{{order.id}}" class="btn btn-primary btn-block" style="display: {{ display }}; margin-top: 0.5rem">
+    Pay Now
+  </button>
+{% elseif services.template.isCurrentTemplate('tpl.confirmation') %}
+  <div id="nnReinitPaymentMethod-{{order.id}}" class="row con-reinit" style="display:{{ display }};">
+    <strong class="col-xs-6 col-sm-5"></strong>
+    <span class="col-xs-6 col-sm-7">
+      <input type="hidden" name="paymentMethodId" id="paymentMethodId" value="{{paymentMethodId}}">
+      {% if isRedirectPayment == true %}
+      <input type="hidden" name="nn_redirect_url" id="nn_redirect_url" value="{{redirectUrl}}">
+      <a class="payment-confirmation-btn" id="redirect-payment-process"> Pay Now </a>
+      {% elseif paymentKey in ['NOVALNET_SEPA', 'NOVALNET_CC', 'NOVALNET_INSTALMENT_INVOICE', 'NOVALNET_INSTALMENT_SEPA'] %}
+       <a class="payment-confirmation-btn" @click="" id="form-payment-process" data-toggle="modal" data-target="#novalnetPaymentForm"> Pay Now </a>
+      {% else %}
+      <a class="payment-confirmation-btn" id="direct-payment-process"> Pay Now </a>
+      {% endif %}
+    </span>
+  </div>
+{% endif %}
+
+<div class="modal" tabindex="-1" role="dialog" id="novalnetPaymentForm">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      {% if paymentKey == 'NOVALNET_SEPA' %}
+      {% include "Novalnet::PaymentForm.NOVALNET_SEPA" %}
+      {% elseif paymentKey == 'NOVALNET_CC' %}
+      {% include "Novalnet::PaymentForm.NOVALNET_CC" %}
+      {% elseif paymentKey in ['NOVALNET_INSTALMENT_INVOICE', 'NOVALNET_INSTALMENT_SEPA'] %}
+      {% include "Novalnet::PaymentForm.NOVALNET_INSTALMENT" %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+
+<script>
+jQuery('document').ready(function() {
+  jQuery('#redirect-payment-process').click(function() {
+    window.location.href = jQuery('#nn_redirect_url').val();
+  });
+  
+  jQuery('#form-payment-process').click(function() {
+    jQuery('#novalnetPaymentForm').show();
+  });
+  
+});
+</script>
