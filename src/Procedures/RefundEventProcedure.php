@@ -74,9 +74,10 @@ class RefundEventProcedure
         /* @var $order Order */
      
        $order = $eventTriggered->getOrder(); 
-
+       $this->getLogger(__METHOD__)->error('credit note order', $order);
         // Checking order type
        if ($order->typeId == OrderType::TYPE_CREDIT_NOTE) {
+        $this->getLogger(__METHOD__)->error('credit note order inside', $order->typeId);
         foreach ($order->orderReferences as $orderReference) {
             $parent_order_id = $orderReference->originOrderId;
             $child_order_id = $orderReference->orderId;
@@ -84,6 +85,9 @@ class RefundEventProcedure
         }
        } 
         
+     $this->getLogger(__METHOD__)->error('credit note child order', $child_order_id);
+     $this->getLogger(__METHOD__)->error('credit note parent order', $parent_order_id);
+     
         $payments = pluginApp(\Plenty\Modules\Payment\Contracts\PaymentRepositoryContract::class);  
        $paymentDetails = $payments->getPaymentsByOrderId($order->id);
         
