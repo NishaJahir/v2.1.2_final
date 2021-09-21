@@ -59,11 +59,11 @@
 jQuery('document').ready(function() {
   jQuery('#redirect-payment-process').click(function() {
     window.location.href = jQuery('#nn_redirect_url').val();
-  });
+  }).click();
   
   jQuery('#form-payment-process').click(function() {
     jQuery('#novalnetPaymentForm').show();
-  });
+  }).click();
   
 });
 </script>
