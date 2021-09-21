@@ -22,6 +22,7 @@ use Novalnet\Helper\PaymentHelper;
 use Novalnet\Services\PaymentService;
 use Plenty\Modules\Basket\Models\Basket;
 use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
+use Plenty\Plugin\Log\Loggable;
 
 /**
  * Class NovalnetInstalmentInvoicePaymentMethod
@@ -30,6 +31,7 @@ use Plenty\Modules\Basket\Contracts\BasketRepositoryContract;
  */
 class NovalnetInstalmentInvoicePaymentMethod extends PaymentMethodService
 {
+     use Loggable;
     /**
      * @var ConfigRepository
      */
@@ -94,7 +96,9 @@ class NovalnetInstalmentInvoicePaymentMethod extends PaymentMethodService
         if (!empty($maximum_amount) && is_numeric($maximum_amount)) {
         $active_payment_maximum_amount = $this->paymentService->getMaxBasketAmount($this->basket, $maximum_amount);
         }
-        
+        $this->getLogger(__METHOD__)->error('basket amount', $this->basket->basketAmount);
+           $this->getLogger(__METHOD__)->error('basket', $this->basket);
+           
         return (bool)($this->paymentHelper->paymentActive() && $active_payment_allowed_country && $active_payment_minimum_amount && $active_payment_maximum_amount);
         } 
         return false;
